@@ -47,7 +47,9 @@ echo $file1
 if [ -e "$file1" ]
 then
   mv /etc/network/interfaces /etc/network/interfaces.old
-  cp interfeces  /etc/network/
+  cp interfaces  /etc/network/
+else
+  cp interfaces  /etc/network/
 fi
 ip addr flush dev $int_name
 /etc/init.d/networking restart
