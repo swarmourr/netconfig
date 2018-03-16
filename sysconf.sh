@@ -228,13 +228,56 @@ echo " done "
 
 }
 
+route(){
+
+echo "tu veux 1-ajouter ou 2-supprimer 1/2"
+read choix 
+
+case $choix in
+
+	1 )  echo " Ajouter une nouvelle route "
+	    echo " entrer l'addresse ip "
+	    read ip
+            echo " entrer le mask "
+            read mask
+            echo " la passrelle"
+            read pass
+            echo " entrez m'interface"
+            read int
+	    route add -net $ip netmask $mask gw $pass dev $int
+	    echo "la table de routage "
+	    route -n
+;;
+
+	2 )  echo " Supprimer une route "
+	    echo " entrer l'addresse ip "
+	    read ip
+            echo " entrer le mask "
+            read mask
+            echo " la passrelle"
+            read pass
+            echo " entrez m'interface"
+            read int
+	    route del -net $ip netmask $mask gw $pass dev $int
+	    echo " la table de routage "
+	    route -n 
+;;
+
+	 * ) echo " choisir 1 ou 2 " 
+	     route
+;;
+esac
+}
+
+
 
 echo " choisissez le numero de la configuration "
 echo  " 1 - static "
 echo  " 2 - gw "
 echo  " 3 - dhcp "
 echo  " 4 - relay "
-echo  " 5 - quitter"
+echo  " 5 - ajouter une route"
+echo  " 6 - quitter"
 read a
 
 case $a in 
@@ -244,7 +287,8 @@ case $a in
 	2 ) gw ;;
 	3 ) dhcp ;;
 	4 ) relay;;
-	5 ) exit 0;;
+	5 ) route;;
+	6 ) exit 0;;
 	* ) echo "retry next time"
 
 esac
