@@ -130,12 +130,15 @@ int_name=$(ls /sys/class/net/|cut -d" " -f 1 | head -1)
 
 echo "default-lease-time 600;" >dhcpd.conf
 echo "max-lease-time 7200;" >>dhcpd.conf
-
-echo " entrez addresse reseaux  et net-mask "
+echo " entrez nombre des ranges"
+read i 
+for j in $(seq 1 $i)
+do
+echo " entrez addresse reseaux  et net-mask du range $i :"
 read ip mask
-echo "entrez le range "
+echo "entrez le range du range $i : "
 read r1 r2
-echo "entrez passerelle et broadcast "
+echo "entrez passerelle et broadcast du range $i : "
 read pass broad
 
 echo >>dhcpd.conf
@@ -150,6 +153,7 @@ echo   "max-lease-time 7200;">>dhcpd.conf
 echo }>>dhcpd.conf
 
 echo >>dhcpd.conf
+done
 
 echo " veux tu fixer ip d'une machine o/n "
 read choix 
@@ -272,6 +276,13 @@ case $choix in
 esac
 }
 
+forwading(){
+
+echo " activing the forwading "
+
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+}
 
 
 echo " choisissez le numero de la configuration "
@@ -280,7 +291,8 @@ echo  " 2 - gw "
 echo  " 3 - dhcp "
 echo  " 4 - relay "
 echo  " 5 - ajouter une route"
-echo  " 6 - quitter"
+echo  " 6 - activer le routage"
+echo  " 7 - quitter"
 read a
 
 case $a in 
@@ -291,7 +303,8 @@ case $a in
 	3 ) dhcp ;;
 	4 ) relay;;
 	5 ) route;;
-	6 ) exit 0;;
+	6 ) forwading;;
+	7 ) exit 0;;
 	* ) echo "retry next time"
 
 esac
