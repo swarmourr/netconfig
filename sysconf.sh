@@ -207,7 +207,8 @@ fi
 relay(){
 
 echo "configuration du relay"
-cp isc-dhcp-relay /tmp/
+
+gw
 
 echo " entrez les interfaces des serveur relay "
 read int
