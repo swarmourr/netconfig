@@ -103,10 +103,12 @@ if [ -e "$file1" ]
 then
   mv /etc/network/interfaces /etc/network/interfaces.old
   cp interfeces  /etc/network/
+else
+  cp interfeces  /etc/network/
 fi
 
 for i in $(ls /sys/class/net/) ; do
-    /usr/sbin/ip addr flush $i &
+    ip addr flush $i &
 done
 
 echo " activing the forwading "
