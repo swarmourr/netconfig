@@ -63,7 +63,15 @@ echo " configuration interfaces de serveur de la gateway "
 
 echo " entrez le nombre des interfaces de la gateway "
 read nmbr 
-cp interfaces /tmp/interfaces
+
+ echo " # This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback" > interfaces
 
 for i in $(seq 1 $nmbr)
 do
@@ -79,14 +87,7 @@ do
  read mask
  echo "entrez la passrelle " 
  read pass
- echo " # This file describes the network interfaces available on your system
-# and how to activate them. For more information, see interfaces(5).
 
-source /etc/network/interfaces.d/*
-
-# The loopback network interface
-auto lo
-iface lo inet loopback" > interfaces
  echo >> interfaces
  echo allow-hotplug $int_name  >> interfaces
  echo iface $int_name inet static >> interfaces
@@ -102,9 +103,9 @@ echo $file1
 if [ -e "$file1" ]
 then
   mv /etc/network/interfaces /etc/network/interfaces.old
-  cp interfeces  /etc/network/
+  cp interfaces  /etc/network/
 else
-  cp interfeces  /etc/network/
+  cp interfaces  /etc/network/
 fi
 
 for i in $(ls /sys/class/net/) ; do
