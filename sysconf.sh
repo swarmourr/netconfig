@@ -12,7 +12,8 @@ echo "--------------------------------------------------------------------------
 //     \:\  \        \:\/:/  /   \/__\:\  \      \:\/:/  /     \:\/:/  /     \:\  \        \:\  \          \::/  /   \:\/:/  /  
 //      \:\__\        \::/  /         \:\__\      \::/  /       \::/  /       \:\__\        \:\__\         /:/  /     \::/  /   
 //       \/__/         \/__/           \/__/       \/__/         \/__/         \/__/         \/__/         \/__/       \/__/    
---------------------------------------------------------------------------------------------------------------swarmourr © 2018 --- "
+-------------------------------------------------------------------------------------------------------------------swarmourr © 2018---------"
+debian(){
 static(){
 
 echo " configuration des interfaces avec un ip static "
@@ -285,6 +286,87 @@ echo 1 > /proc/sys/net/ipv4/ip_forward
 
 }
 
+nis(){
+
+echo " cofigurations   nis "
+echo " choisissez le numero de la configuration "
+echo  " 1 - serveur "
+echo  " 2 - client  "
+read op
+serv(){
+static 
+echo " configuration serveur nis  "
+dpkg-reconfigure nis
+
+file=/etc/default/nis
+
+if [ -e "$file" ]
+then
+  mv /etc/default/nis /etc/default/nis.old
+  cp nis /etc/default/
+else 
+  cp nis /etc/default/
+fi
+/etc/init.d/nis start
+echo " entrez le mask et addresse reseaux des client accessible"
+read ip 
+file1= /etc/ypserver.securenets 
+if [ -e "$file1" ]
+then
+  echo $ip >> /etc/ypserver.securenets 
+else 
+  echo $ip >> ypserver.securenets
+  cp ypserver.securenets /etc
+fi
+
+service nis restart 
+/usr/lib/yp/ypinit -m 
+cd /var/yp
+make
+}
+
+clt(){
+echo  " configuration client nis "
+echo " entrez addresse ip de serveur "
+read ip_serveur
+files= /etc/yp.conf
+if [ -e "$files" ]
+then
+  echo ypserver $ip >> /etc/yp.conf
+else 
+  echo $ip >> yp.conf
+  cp yp.conf /etc
+fi
+file2= /etc/nsswitch.conf
+if [ -e "$file2" ]
+then
+  mv /etc/nsswitch.conf /etc/nsswitch.conf.old
+  cp nsswitch.conf /etc/
+else 
+  echo $ip >> yp.conf
+  cp yp.conf /etc
+fi
+file=/etc/default/nis
+
+if [ -e "$file" ]
+then
+  mv /etc/default/nis /etc/default/nis.old
+  cp nis_client /etc/default/nis
+else 
+   cp nis_client /etc/default/nis
+fi
+
+/usr/lib/yp/ypint -s $ip
+}
+ 
+case $op in 
+
+	1 ) serv ;;
+	2 ) clt ;;
+
+
+esac
+}
 
 echo " choisissez le numero de la configuration "
 echo  " 1 - static "
@@ -293,11 +375,11 @@ echo  " 3 - dhcp "
 echo  " 4 - relay "
 echo  " 5 - ajouter une route"
 echo  " 6 - activer le routage"
-echo  " 7 - quitter"
+echo  " 7 - nis"
+echo  " 8 - quitter"
 read a
 
 case $a in 
-
 
 	1 ) static ;;
 	2 ) gw ;;
@@ -305,9 +387,30 @@ case $a in
 	4 ) relay;;
 	5 ) route;;
 	6 ) forwading;;
-	7 ) exit 0;;
+	7 ) nis;;
+	8 ) exit 0;;
 	* ) echo "retry next time"
 
 esac
+}
+
+redhat(){
+
+echo "bienvenue dans le redhat"
+echo " ca " 
+
+}
+
+
+echo " choisir la famille 1- debian   2- redhat "
+read i
+
+case $i in 
+
+	1 ) debian;;
+
+	2 ) redhat ;;
 	
- 
+	* ) echo "desolé juste linux "
+
+esac
